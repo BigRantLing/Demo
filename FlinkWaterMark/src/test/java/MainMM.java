@@ -1,7 +1,6 @@
 public class MainMM {
     public static void main(String[] args) {
-        int a = 3;
-        a = a>4? a:4;
-        System.out.println(a);
+        String c1 ="hello"+"\u0001"+"World";
+        System.out.println(c1);
     }
 }
