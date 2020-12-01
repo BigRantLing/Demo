@@ -1,7 +1,11 @@
-grammar Dsl;    //定义规则文件grammar
-@header {        //一种action,定义生成的词法语法解析文件的头，当使用java的时候，生成的类需要包名，可以在这里统一定义
+//定义规则文件grammar,指定生成的java类名
+grammar Dsl;
+//指定java类对应的头部，这里是报名
+@header {
  package antlr;
  }
+
+prog : sta;
 
 //parsers
 sta:(sql ender)*;  //定义sta规则，里面包含了*（0个以上）个 sql ender组合规则

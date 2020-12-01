@@ -6,6 +6,7 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
+import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrdernessTimestampExtractor;
 import org.apache.flink.streaming.api.watermark.Watermark;
 import org.apache.flink.streaming.api.windowing.time.Time;
 
@@ -20,9 +21,15 @@ public class Main {
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
         env.setParallelism(1);
 
-        DataStreamSource<String> source = env.addSource(new MySource());
+        DataStreamSource<String> source = env.addSource(new MySource_2());
 
         SingleOutputStreamOperator<Tuple2<String, Integer>> transformatted = source
+                .assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor<String>(Time.seconds(0)) {
+                    @Override
+                    public long extractTimestamp(String s) {
+                        return Long.parseLong(s.split("_")[1]);
+                    }
+                })
                     .map(element -> Tuple2.of(element.split("_")[0], 1))
                     .returns(Types.TUPLE(Types.STRING, Types.INT))
                     .keyBy(value -> value.f0)
@@ -62,6 +69,37 @@ public class Main {
             this.isRunning = false;
         }
     }
+
+
+    public static class MySource_2 implements SourceFunction<String> {
+
+        private boolean isRunning = true;
+        private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        @Override
+        public void run(SourceContext<String> sourceContext) throws Exception {
+            while (isRunning) {
+                Thread.sleep(1000);
+                char letter =(char)(65 + new Random().nextInt(25));
+                long timeMills = System.currentTimeMillis();
+                String element = new StringBuffer()
+                        .append(letter)
+                        .append("_")
+                        .append(timeMills)
+                        .toString();
+
+                System.out.println(element);
+                sourceContext.collect(element);
+
+            }
+        }
+
+        @Override
+        public void cancel() {
+            this.isRunning = false;
+        }
+    }
+
 
 }
 
