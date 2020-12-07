@@ -1,7 +1,6 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twitter.bijection.Injection;
-import com.twitter.bijection.avro.GenericAvroCodec;
 import com.twitter.bijection.avro.GenericAvroCodecs;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
@@ -9,12 +8,10 @@ import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.protocol.types.Field;
+import protobuf.model.Student;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,9 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class KafkaMain {
-    public static void main(String[] args) throws JsonProcessingException, InterruptedException {
+    public static void main(String[] args) throws JsonProcessingException, InterruptedException, ExecutionException {
 
         Properties kafkaProperties = new Properties();
 
@@ -35,7 +34,7 @@ public class KafkaMain {
         Producer producer = new KafkaProducer(kafkaProperties);
 
         while(true) {
-            sendAvroMessage(producer, 2);
+            sendProtobufMessage(producer, 2);
             Thread.sleep(1000);
         }
 
@@ -151,6 +150,27 @@ public class KafkaMain {
         }
 
     }
+
+    public static void sendProtobufMessage(Producer producer, int messageBatch) throws ExecutionException, InterruptedException {
+        Student.Builder eventBuilder = Student.newBuilder();
+
+        Random random = new Random();
+
+        for (int count=0; count<messageBatch; count++) {
+            String name = getRandomStringName(4 - random.nextInt(3));
+            eventBuilder.setName(name);
+            eventBuilder.setAge(random.nextInt(18));
+            eventBuilder.setClazz("A");
+
+            byte[] event = eventBuilder.build().toByteArray();
+            ProducerRecord<String, String> kafkaRecord = new ProducerRecord("clickhouse_protobuf_01", String.valueOf(random.nextInt()), "111");
+            Future f = producer.send(kafkaRecord);
+            f.get();
+        }
+
+    }
+
+    public static void sendCanProtoMessage() {}
 
 
     public static String getRandomStringName(int len) {
