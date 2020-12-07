@@ -162,10 +162,16 @@ public class KafkaMain {
             eventBuilder.setAge(random.nextInt(18));
             eventBuilder.setClazz("A");
 
-            byte[] event = eventBuilder.build().toByteArray();
-            ProducerRecord<String, String> kafkaRecord = new ProducerRecord("clickhouse_protobuf_01", String.valueOf(random.nextInt()), "111");
-            Future f = producer.send(kafkaRecord);
-            f.get();
+            Student event = eventBuilder.build();
+
+            if (event.isInitialized()) {
+                event
+                ProducerRecord<String, String> kafkaRecord = new ProducerRecord("clickhouse_protobuf_02", String.valueOf(random.nextInt()), event.toByteArray());
+                producer.send(kafkaRecord);
+            }
+
+
+
         }
 
     }
