@@ -10,6 +10,7 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import protobuf.model.Student;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -23,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class KafkaMain {
-    public static void main(String[] args) throws JsonProcessingException, InterruptedException, ExecutionException {
+    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
 
         Properties kafkaProperties = new Properties();
 
@@ -151,10 +152,12 @@ public class KafkaMain {
 
     }
 
-    public static void sendProtobufMessage(Producer producer, int messageBatch) throws ExecutionException, InterruptedException {
+    public static void sendProtobufMessage(Producer producer, int messageBatch) throws ExecutionException, InterruptedException, IOException {
         Student.Builder eventBuilder = Student.newBuilder();
 
         Random random = new Random();
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         for (int count=0; count<messageBatch; count++) {
             String name = getRandomStringName(4 - random.nextInt(3));
@@ -165,8 +168,9 @@ public class KafkaMain {
             Student event = eventBuilder.build();
 
             if (event.isInitialized()) {
-                event
-                ProducerRecord<String, String> kafkaRecord = new ProducerRecord("clickhouse_protobuf_02", String.valueOf(random.nextInt()), event.toByteArray());
+                event.writeDelimitedTo(outputStream);
+                outputStream.close();
+                ProducerRecord<String, String> kafkaRecord = new ProducerRecord("clickhouse_protobuf_02", String.valueOf(random.nextInt()), outputStream.toByteArray());
                 producer.send(kafkaRecord);
             }
 
