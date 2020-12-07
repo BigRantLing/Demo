@@ -1,10 +1,20 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.twitter.bijection.Injection;
+import com.twitter.bijection.avro.GenericAvroCodec;
+import com.twitter.bijection.avro.GenericAvroCodecs;
+import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.protocol.types.Field;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,20 +24,25 @@ import java.util.Properties;
 import java.util.Random;
 
 public class KafkaMain {
-    public static void main(String[] args) throws JsonProcessingException {
+    public static void main(String[] args) throws JsonProcessingException, InterruptedException {
 
         Properties kafkaProperties = new Properties();
 
         kafkaProperties.put("bootstrap.servers", "localhost:9092");
         kafkaProperties.put("request.required.acks", "0");
         kafkaProperties.put("key.serializer","org.apache.kafka.common.serialization.StringSerializer");
-        kafkaProperties.put("value.serializer","org.apache.kafka.common.serialization.StringSerializer");
+        kafkaProperties.put("value.serializer","org.apache.kafka.common.serialization.ByteArraySerializer");
         Producer producer = new KafkaProducer(kafkaProperties);
+
+        while(true) {
+            sendAvroMessage(producer, 2);
+            Thread.sleep(1000);
+        }
 
 //        String t = "\u00012020-12-01\u0001驼泛滴\u0001118\u0001L\u0001";
 
 //        sendJsonMessage(producer, 10000);
-        sendTSVMessage(producer, 20,"\u0001");
+//        sendTSVMessage(producer, 20,"\u0001");
     }
 
 
@@ -98,6 +113,43 @@ public class KafkaMain {
 //            producer.send(kafkaRecord);
             messageBatch--;
         }
+    }
+
+
+    public static void sendAvroMessage(Producer producer, int messageBatch) {
+
+        Injection<GenericRecord, byte[]> recordInjection;
+        Schema schema;
+
+        try (InputStream inputStream = KafkaMain.class.getClassLoader().getResourceAsStream("polarisAvro.json")) {
+            schema = new Schema.Parser().parse(inputStream);
+            recordInjection = GenericAvroCodecs.toBinary(schema);
+        } catch (IOException e) {
+           throw new RuntimeException(e);
+        }
+
+        Random random = new Random();
+
+        for (int count=0; count<messageBatch; count++) {
+            String name = getRandomStringName(4 - random.nextInt(3));
+            GenericData.Record record = new GenericData.Record(schema);
+            record.put("user_name", name);
+            record.put("time_hour", Long.parseLong(String.valueOf(random.nextInt(1000000))));
+            record.put("age", random.nextInt(130));
+
+//            int matesCounter = random.nextInt();
+//            List<String> mates = new ArrayList<>();
+//            for (int f =0; f<matesCounter; f++) {
+//                mates.add(getRandomStringName(4 - random.nextInt(3)));
+//            }
+
+//            record.put("mates", mates.toArray());
+            byte[] event = recordInjection.apply(record);
+            ProducerRecord<String, byte[]> kafkaRecord = new ProducerRecord("clickhouse_xf_77",name, event);
+
+            producer.send(kafkaRecord);
+        }
+
     }
 
 

@@ -1,0 +1,9 @@
+{
+    "type":"record",
+    "name":"userEvent",
+    "fields":[
+       {"name":"user_name" ,"type":"string"},
+       {"name":"time_hour" ,"type":"long"},
+       {"name":"age" ,"type":"int"}
+    ]
+}
