@@ -170,7 +170,7 @@ public class KafkaMain {
             if (event.isInitialized()) {
                 event.writeDelimitedTo(outputStream);
                 outputStream.close();
-                ProducerRecord<String, String> kafkaRecord = new ProducerRecord("clickhouse_protobuf_02", String.valueOf(random.nextInt()), outputStream.toByteArray());
+                ProducerRecord<String, String> kafkaRecord = new ProducerRecord("clickhouse_protobuf_010", String.valueOf(random.nextInt()), outputStream.toByteArray());
                 producer.send(kafkaRecord);
             }
 
