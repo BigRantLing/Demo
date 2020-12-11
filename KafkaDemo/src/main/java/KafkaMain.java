@@ -21,21 +21,21 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+
 
 public class KafkaMain {
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
 
         Properties kafkaProperties = new Properties();
 
-        kafkaProperties.put("bootstrap.servers", "localhost:9092");
+        kafkaProperties.put("bootstrap.servers", "10.23.130.12:9092");
         kafkaProperties.put("request.required.acks", "0");
         kafkaProperties.put("key.serializer","org.apache.kafka.common.serialization.StringSerializer");
         kafkaProperties.put("value.serializer","org.apache.kafka.common.serialization.ByteArraySerializer");
         Producer producer = new KafkaProducer(kafkaProperties);
 
         while(true) {
-            sendProtobufMessage(producer, 2);
+            sendProtobufMessage(producer, 1);
             Thread.sleep(1000);
         }
 
@@ -165,16 +165,21 @@ public class KafkaMain {
             eventBuilder.setAge(random.nextInt(18));
             eventBuilder.setClazz("A");
 
+            int matestCount = random.nextInt(11);
+            for (int i=0; i<=matestCount; i++) {
+                eventBuilder.addMates(getRandomStringName(4- random.nextInt(3)));
+            }
+
             Student event = eventBuilder.build();
 
             if (event.isInitialized()) {
                 event.writeDelimitedTo(outputStream);
                 outputStream.close();
-                ProducerRecord<String, String> kafkaRecord = new ProducerRecord("clickhouse_protobuf_010", String.valueOf(random.nextInt()), outputStream.toByteArray());
+                ProducerRecord<String, String> kafkaRecord = new ProducerRecord("clickhouse_protobuf_111",
+                        String.valueOf(random.nextInt()),
+                        outputStream.toByteArray());
                 producer.send(kafkaRecord);
             }
-
-
 
         }
 

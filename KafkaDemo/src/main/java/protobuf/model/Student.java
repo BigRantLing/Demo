@@ -18,6 +18,7 @@ private static final long serialVersionUID = 0L;
   private Student() {
     name_ = "";
     clazz_ = "";
+    mates_ = com.google.protobuf.LazyStringArrayList.EMPTY;
   }
 
   @java.lang.Override
@@ -40,6 +41,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -67,6 +69,15 @@ private static final long serialVersionUID = 0L;
             clazz_ = s;
             break;
           }
+          case 34: {
+            java.lang.String s = input.readStringRequireUtf8();
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              mates_ = new com.google.protobuf.LazyStringArrayList();
+              mutable_bitField0_ |= 0x00000001;
+            }
+            mates_.add(s);
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -82,6 +93,9 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      if (((mutable_bitField0_ & 0x00000001) != 0)) {
+        mates_ = mates_.getUnmodifiableView();
+      }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
@@ -186,6 +200,41 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int MATES_FIELD_NUMBER = 4;
+  private com.google.protobuf.LazyStringList mates_;
+  /**
+   * <code>repeated string mates = 4;</code>
+   * @return A list containing the mates.
+   */
+  public com.google.protobuf.ProtocolStringList
+      getMatesList() {
+    return mates_;
+  }
+  /**
+   * <code>repeated string mates = 4;</code>
+   * @return The count of mates.
+   */
+  public int getMatesCount() {
+    return mates_.size();
+  }
+  /**
+   * <code>repeated string mates = 4;</code>
+   * @param index The index of the element to return.
+   * @return The mates at the given index.
+   */
+  public java.lang.String getMates(int index) {
+    return mates_.get(index);
+  }
+  /**
+   * <code>repeated string mates = 4;</code>
+   * @param index The index of the value to return.
+   * @return The bytes of the mates at the given index.
+   */
+  public com.google.protobuf.ByteString
+      getMatesBytes(int index) {
+    return mates_.getByteString(index);
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -209,6 +258,9 @@ private static final long serialVersionUID = 0L;
     if (!getClazzBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, clazz_);
     }
+    for (int i = 0; i < mates_.size(); i++) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, mates_.getRaw(i));
+    }
     unknownFields.writeTo(output);
   }
 
@@ -227,6 +279,14 @@ private static final long serialVersionUID = 0L;
     }
     if (!getClazzBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, clazz_);
+    }
+    {
+      int dataSize = 0;
+      for (int i = 0; i < mates_.size(); i++) {
+        dataSize += computeStringSizeNoTag(mates_.getRaw(i));
+      }
+      size += dataSize;
+      size += 1 * getMatesList().size();
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -249,6 +309,8 @@ private static final long serialVersionUID = 0L;
         != other.getAge()) return false;
     if (!getClazz()
         .equals(other.getClazz())) return false;
+    if (!getMatesList()
+        .equals(other.getMatesList())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -266,6 +328,10 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getAge();
     hash = (37 * hash) + CLAZZ_FIELD_NUMBER;
     hash = (53 * hash) + getClazz().hashCode();
+    if (getMatesCount() > 0) {
+      hash = (37 * hash) + MATES_FIELD_NUMBER;
+      hash = (53 * hash) + getMatesList().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -405,6 +471,8 @@ private static final long serialVersionUID = 0L;
 
       clazz_ = "";
 
+      mates_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000001);
       return this;
     }
 
@@ -431,9 +499,15 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public protobuf.model.Student buildPartial() {
       protobuf.model.Student result = new protobuf.model.Student(this);
+      int from_bitField0_ = bitField0_;
       result.name_ = name_;
       result.age_ = age_;
       result.clazz_ = clazz_;
+      if (((bitField0_ & 0x00000001) != 0)) {
+        mates_ = mates_.getUnmodifiableView();
+        bitField0_ = (bitField0_ & ~0x00000001);
+      }
+      result.mates_ = mates_;
       onBuilt();
       return result;
     }
@@ -493,6 +567,16 @@ private static final long serialVersionUID = 0L;
         clazz_ = other.clazz_;
         onChanged();
       }
+      if (!other.mates_.isEmpty()) {
+        if (mates_.isEmpty()) {
+          mates_ = other.mates_;
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          ensureMatesIsMutable();
+          mates_.addAll(other.mates_);
+        }
+        onChanged();
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -521,6 +605,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private java.lang.Object name_ = "";
     /**
@@ -701,6 +786,116 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       clazz_ = value;
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.LazyStringList mates_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    private void ensureMatesIsMutable() {
+      if (!((bitField0_ & 0x00000001) != 0)) {
+        mates_ = new com.google.protobuf.LazyStringArrayList(mates_);
+        bitField0_ |= 0x00000001;
+       }
+    }
+    /**
+     * <code>repeated string mates = 4;</code>
+     * @return A list containing the mates.
+     */
+    public com.google.protobuf.ProtocolStringList
+        getMatesList() {
+      return mates_.getUnmodifiableView();
+    }
+    /**
+     * <code>repeated string mates = 4;</code>
+     * @return The count of mates.
+     */
+    public int getMatesCount() {
+      return mates_.size();
+    }
+    /**
+     * <code>repeated string mates = 4;</code>
+     * @param index The index of the element to return.
+     * @return The mates at the given index.
+     */
+    public java.lang.String getMates(int index) {
+      return mates_.get(index);
+    }
+    /**
+     * <code>repeated string mates = 4;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the mates at the given index.
+     */
+    public com.google.protobuf.ByteString
+        getMatesBytes(int index) {
+      return mates_.getByteString(index);
+    }
+    /**
+     * <code>repeated string mates = 4;</code>
+     * @param index The index to set the value at.
+     * @param value The mates to set.
+     * @return This builder for chaining.
+     */
+    public Builder setMates(
+        int index, java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMatesIsMutable();
+      mates_.set(index, value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string mates = 4;</code>
+     * @param value The mates to add.
+     * @return This builder for chaining.
+     */
+    public Builder addMates(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMatesIsMutable();
+      mates_.add(value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string mates = 4;</code>
+     * @param values The mates to add.
+     * @return This builder for chaining.
+     */
+    public Builder addAllMates(
+        java.lang.Iterable<java.lang.String> values) {
+      ensureMatesIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, mates_);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string mates = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearMates() {
+      mates_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000001);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string mates = 4;</code>
+     * @param value The bytes of the mates to add.
+     * @return This builder for chaining.
+     */
+    public Builder addMatesBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      ensureMatesIsMutable();
+      mates_.add(value);
       onChanged();
       return this;
     }

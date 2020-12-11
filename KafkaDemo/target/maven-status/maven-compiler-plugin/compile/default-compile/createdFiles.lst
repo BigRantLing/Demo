@@ -1,0 +1,7 @@
+protobuf/model/StudentSchema.class
+Event.class
+protobuf/model/Student$1.class
+protobuf/model/Student.class
+protobuf/model/Student$Builder.class
+KafkaMain.class
+protobuf/model/StudentOrBuilder.class

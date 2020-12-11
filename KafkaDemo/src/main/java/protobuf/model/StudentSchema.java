@@ -28,9 +28,10 @@ public final class StudentSchema {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\023studentSchema.proto\022\013cc.protobuf\"3\n\007St" +
+      "\n\023studentSchema.proto\022\013cc.protobuf\"B\n\007St" +
       "udent\022\014\n\004name\030\001 \001(\t\022\013\n\003age\030\002 \001(\005\022\r\n\005claz" +
-      "z\030\003 \001(\tB\022\n\016protobuf.modelP\001b\006proto3"
+      "z\030\003 \001(\t\022\r\n\005mates\030\004 \003(\tB\022\n\016protobuf.model" +
+      "P\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -41,7 +42,7 @@ public final class StudentSchema {
     internal_static_cc_protobuf_Student_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_cc_protobuf_Student_descriptor,
-        new java.lang.String[] { "Name", "Age", "Clazz", });
+        new java.lang.String[] { "Name", "Age", "Clazz", "Mates", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -36,4 +36,29 @@ public interface StudentOrBuilder extends
    */
   com.google.protobuf.ByteString
       getClazzBytes();
+
+  /**
+   * <code>repeated string mates = 4;</code>
+   * @return A list containing the mates.
+   */
+  java.util.List<java.lang.String>
+      getMatesList();
+  /**
+   * <code>repeated string mates = 4;</code>
+   * @return The count of mates.
+   */
+  int getMatesCount();
+  /**
+   * <code>repeated string mates = 4;</code>
+   * @param index The index of the element to return.
+   * @return The mates at the given index.
+   */
+  java.lang.String getMates(int index);
+  /**
+   * <code>repeated string mates = 4;</code>
+   * @param index The index of the value to return.
+   * @return The bytes of the mates at the given index.
+   */
+  com.google.protobuf.ByteString
+      getMatesBytes(int index);
 }
