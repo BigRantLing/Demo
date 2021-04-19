@@ -1,23 +1,37 @@
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Event {
-    private String ctime;
+    @JsonProperty("log_date")
+    private String logDate;
+    @JsonProperty("id")
+    private int id;
+    @JsonProperty("name")
     private String name;
-    private int age;
-    private String level;
+    @JsonProperty("score")
+    private float score;
+    @JsonProperty("mates")
     private List<String> mates;
+    @JsonProperty("content")
+    private String content;
 
 
-    public String getCtime() {
-        return ctime;
+    public String getLogDate() {
+        return logDate;
     }
 
-    public void setCtime(String ctime) {
-        this.ctime = ctime;
+    public void setLogDate(String logDate) {
+        this.logDate = logDate;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -28,20 +42,12 @@ public class Event {
         this.name = name;
     }
 
-    public int getAge() {
-        return age;
+    public float getScore() {
+        return score;
     }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
+    public void setScore(float score) {
+        this.score = score;
     }
 
     public List<String> getMates() {
@@ -50,5 +56,13 @@ public class Event {
 
     public void setMates(List<String> mates) {
         this.mates = mates;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

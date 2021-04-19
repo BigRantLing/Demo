@@ -1,31 +1,25 @@
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.codehaus.jackson.map.ObjectMapper;
 
-import java.nio.charset.Charset;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UTFTests {
-    public static void main(String[] args) {
-        char ch = '\u0001';
-        System.out.print("Hello");
-        System.out.print(ch);
-        System.out.print("world");
+    public static void main(String[] args) throws IOException {
 
-    }
+        ObjectMapper mapper = new ObjectMapper();
+        Event event = new Event();
+        event.setContent("content");
+        event.setScore(2.3f);
+        event.setId(1);
+        List<String> mates = new ArrayList<>();
+        mates.add("qiang");
+        mates.add("ming");
+        event.setMates(mates);
+        event.setName("xiao hogn");
+        event.setLogDate("2020-12-25");
 
+        System.out.println(mapper.writeValueAsString(event));
 
-    public static class Person{
-        private String name;
-
-        public Person(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 }
